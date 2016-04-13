@@ -1,1 +1,1 @@
-# MyFirstGitRepository
+这是一个库文件，通过MVC的方式来开发项目。
