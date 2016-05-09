@@ -74,6 +74,61 @@
 			})
 		},
 		/*
+		 * @description 返回数组最大值
+		*/
+		max : function(arr){
+			return Math.max.apply({},arr);
+		},
+		/*
+		 * @description 返回数组最小值
+		*/
+		min : function(arr){
+			return Math.min.apply({},arr);
+		},
+		/*
+		 * @description 判断对象是否为空对象
+		*/
+		isEmptyObject : function(obj){
+			for (var p in obj) {
+				return false;
+			}
+			return true;
+		},
+		/*
+		 * @description 判断类型
+		*/
+		type : function(obj){
+			var str = toString.call(obj).replace(/[\[\]]/g,''),
+				arr = str.split(' ');
+			return arr[1].toLowerCase();
+		},
+		single : function(arr,index){
+			var hash = {},
+				ret = [];		
+			if(arguments.length == 1){
+				for(var i=0,len=arr.length;i<len;i++){
+					var item = arr[i],
+						temp = (typeof item) +item
+					if(hash[temp] !== 1){
+						hash[temp] = 1;
+						ret.push(item);
+					}
+				}
+			}else{
+				for(var i=0,len=arr.length;i<len;i++){
+					var item = arr[i],
+						oindex = item[index],
+						temp = (typeof oindex) + oindex;
+					if(hash[temp] !== 1){
+						hash[temp] = 1;
+						ret.push(item);
+					}
+				}
+			}
+			
+			return ret;
+		},
+		/*
 		 * @description 服务放到此处
 		 */
 		service : {},
@@ -110,28 +165,21 @@
 			script.src = url;
 			head.appendChild(script);
 		},
-		getService : function(_url,callback){
-			var url = './Script/Services/'+_url+'.js';
-			this.getScript(url,callback,this.service);
-		},
-		getPlugin : function(_url,callback){
-			var url = './Script/Libs/'+_url+'.js';
-			this.getScript(url,callback,this.plugin);
-		},
-		getMethods : function(_url,callback){
-			var url = './Script/Methods/'+_url+'.js';
-			this.getScript(url,callback,this.methods);
-		},
+		
 		require : function(script_arr,callback){
 			var self = this;
 			if(script_arr.length){
-				this.getScript(script_arr.shift(),function(){
-					if(script_arr.length == 1){
-						self.getScript(script_arr[0],callback);
-					}else if(script_arr.length > 1){
-						self.require(script_arr,callback);
-					}
-				});
+				if(script_arr.length == 1){
+					self.getScript(script_arr[0],callback);
+				}else{
+					this.getScript(script_arr.shift(),function(){
+						if(script_arr.length == 1){
+							self.getScript(script_arr[0],callback);
+						}else if(script_arr.length > 1){
+							self.require(script_arr,callback);
+						}
+					});
+				}
 			}
 		}
 	});
