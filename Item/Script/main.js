@@ -67,6 +67,33 @@
 				}
 			});
 		},
+		ws : function(url,callback){
+			var self = this;
+			if ("WebSocket" in window){
+		         console.log("WebSocket is supported by your Browser!");
+		         var ws = new WebSocket(url);
+		         ws.onopen = function(){
+		         	console.log("Message is sent...");
+		         }
+		         
+		         ws.onmessage = function (evt){
+		         	var msg = typeof evt === 'string' ? eval('('+evt.data+')') : evt;
+			        callback.call(this,msg);
+			        ws.send("Message to send");
+		         }
+		         ws.onclose = function(event){
+		         	console.log("Connection is closed...",event);
+		         }
+		         ws.onerror = function(event){
+		         	console.log("Error: ",event);	
+		         }
+		         
+		      }
+		      else
+		      {
+		         console.log("WebSocket NOT supported by your Browser!");
+		      }
+		},
 		getJSON : function(url,callback){
 			var self = this;
 			$.getJSON(url,function(response){
