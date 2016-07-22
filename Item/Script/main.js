@@ -219,8 +219,7 @@
 				_arr.push(_html.replace(reg,function($1,$2){					
 					return element[$2];	
 				}));
-			})
-			console.log(_arr);
+			});
 			$destination.html(_arr.join(''));console.log($destination[0])
 		},
 		/*
