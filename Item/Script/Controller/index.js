@@ -24,11 +24,19 @@
 	var url_arr = [
 		'./Script/Libs/jqueryUI.js',
 		'./Script/Services/AppCommonService.js',
-		'./Script/Methods/AppCommonMethods.js'
+		'./Script/Methods/AppCommonMethods.js',
+		'./Script/Template/AppHTMLTemplate.js'
 	];
 	hmd.require(url_arr,function(){
 		$('#datepicker').datepicker();
 		//console.log(hmd.service);
+		/*var arr = [{name:'aaa',age:23},{name:'bbb',age:34}];
+		hmd.each(arr,function(index,element){
+			console.log(index)
+		})*/
+		var data_b = [{name_b:'bbb',age_b:32,'a-1-b':'qqq'},{name_b:'bbb',age_b:34,'a-1-b':'bbbooo'}];
+		hmd.operateTemplateByHTML();
+		hmd.operateTemplateByScript('script',data_b);
 	});
 	
 	

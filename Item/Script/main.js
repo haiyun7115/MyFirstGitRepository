@@ -1,6 +1,10 @@
+/*
+ * @description 此库要结合jquery
+*/
 ;!function(){
 	var _obj = {},
-		toString = _obj.toString;
+		toString = _obj.toString,
+		_fn = function(){};
 	function _Class(selector){
 		return new _Class.fn.init(selector);
 	}
@@ -13,14 +17,14 @@
 				if(toString.call(selector) === '[object Array]'){
 					for(var i=0,len=selector.length;i<len;i++){
 						(function(index){
-							callback.call(this,index,selector[index]);
+							callback.call(selector[index],index,selector[index]);
 						})(i);						
 					}
 				}
 				if(toString.call(selector) === '[object Object]'){
 					for(var i in selector){
 						(function(index){
-							callback.call(this,i,selector[i]);
+							callback.call(selector[i],i,selector[i]);
 						})(i);							
 					}
 				}
@@ -48,6 +52,28 @@
 	 * @description 为构造函数添加方法
 	 */
 	_Class.extend({
+		each : function(selector,callback){
+			selector = selector || [];
+			callback = callback || _fn;
+			if(typeof callback !== 'function'){
+				callback = _fn;
+			}
+			
+			if(toString.call(selector) === '[object Array]'){
+				for(var i=0,len=selector.length;i<len;i++){
+					(function(index){
+						callback.call(selector[index],index,selector[index]);
+					})(i);						
+				}
+			}
+			if(toString.call(selector) === '[object Object]'){
+				for(var i in selector){
+					(function(index){
+						callback.call(selector[index],index,selector[index]);
+					})(i);							
+				}
+			}
+		},
 		send : function(obj,callback){
 			var url = obj.url,
 				type = obj.type || 'get',
@@ -167,8 +193,60 @@
 		/*
 		 * @description 公共方法
 		 */
-		methods : {},				
-		
+		methods : {},	
+		/*
+		 * @description 模板库
+		*/	
+		template : {},
+		/*
+		 * @description 处理模板中转
+		*/		
+		operateTemplate : function(_temp,callback){
+			callback.call(_temp);			
+		},
+		/*
+		 * @description 根据script标签获取模板
+		*/
+		operateTemplateByScript : function(id,data){			
+			var $script = $('#'+id),
+				destination_id = $script.attr('for'),
+				$destination = $('#'+destination_id),
+				datasource = $script.attr('data-source'),
+				_html = $script.text(),
+				reg = /\{\{([a-z0-9_-]+)\}\}/g,
+				_arr = []; 
+			this.each(data,function(index,element){
+				_arr.push(_html.replace(reg,function($1,$2){					
+					return element[$2];	
+				}));
+			})
+			console.log(_arr);
+			$destination.html(_arr.join(''));console.log($destination[0])
+		},
+		/*
+		 * @description 根据页面元素配置进行模板配置
+		*/
+		operateTemplateByHTML : function(){
+			var _temp = this.template,
+				self = this;			
+			this.operateTemplate(_temp,function(){
+				hmd.each(this,function(index,element){
+					(function(i){
+						element.call(self,i);
+					}(index));				
+				});
+			})
+		},
+		/*
+		 * @description 根据属性获取元素
+		 * @param attr 属性
+		 * @param _parent 寻找元素的范围  为jquery对象
+		 * @return 返回一个数组
+		*/
+		getElementByAttr : function(attr,$parent){
+			$parent = $parent || $('body');
+			return $parent.find('['+attr+']');
+		},
 		/*
 		 * @description 加载js文件
 		 */
