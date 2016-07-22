@@ -220,7 +220,7 @@
 					return element[$2];	
 				}));
 			});
-			$destination.html(_arr.join(''));console.log($destination[0])
+			$destination.html(_arr.join(''));
 		},
 		/*
 		 * @description 根据页面元素配置进行模板配置
