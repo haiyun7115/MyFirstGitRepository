@@ -4,13 +4,13 @@
 ;!function(){
 	var _obj = {},
 		toString = _obj.toString,
+		version = '1.0',
 		_fn = function(){};
 	function _Class(selector){
 		return new _Class.fn.init(selector);
 	}
 	_Class.fn = _Class.prototype = {
 		constructor : _Class,
-		version : '1.0',
 		each : function(callback){
 			var selector = this.selector;
 			if(selector){
@@ -52,6 +52,8 @@
 	 * @description 为构造函数添加方法
 	 */
 	_Class.extend({
+		//键值对的一个版本
+		expando : 'hmd'+(version+Math.random()).replace(/\D/g,''),
 		each : function(selector,callback){
 			selector = selector || [];
 			callback = callback || _fn;
@@ -125,6 +127,20 @@
 			$.getJSON(url,function(response){
 				callback.call(self,response);
 			})
+		},
+		/*
+		 * @description 在页面元素上保存键值对
+		 * @eg:hmd.data(element,'test','aaa')
+		 */
+		data : function(element,key,value){
+			if(value){
+				if(!element[this.expando]){
+					element[this.expando] = {};
+				}
+				element[this.expando][key] = value;
+			}else{
+				return element[this.expando][key];
+			}
 		},
 		/*
 		 * @description 返回数组最大值
@@ -287,6 +303,21 @@
 			}
 		}
 	});
+	
+	/*
+	 * @description 创建cache
+	 */
+	function createCache(){
+		var keys = [],
+			cacheLength = 50;
+		function cache(key,value){
+			if(keys.push(key+' ') > cacheLength){
+				delete cache[keys.shift()];
+			}
+			return (cache[key+' '] = value)
+		}
+		return cache;
+	}
 
 	var init = _Class.fn.init = function(selector){
 		if(arguments.length == 0){
