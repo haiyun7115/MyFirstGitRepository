@@ -32,6 +32,13 @@
 		var data_b = [{name_b:'bbb',age_b:32,'a-1-b':'qqq'},{name_b:'bbb',age_b:34,'a-1-b':'bbbooo'}];
 		hmd.operateTemplateByHTML();
 		hmd.operateTemplateByScript('script',data_b);
+		hmd(data_b).each(function(index,element){
+			//console.log(this)
+		})
+		hmd.each(data_b,function(index,element){
+			console.log(this)
+		})
+		//hmd.extend()
 	});
 	
 	

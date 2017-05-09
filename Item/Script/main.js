@@ -13,20 +13,9 @@
 		constructor : _Class,
 		each : function(callback){
 			var selector = this.selector;
-			if(selector){
-				if(toString.call(selector) === '[object Array]'){
-					for(var i=0,len=selector.length;i<len;i++){
-						(function(index){
-							callback.call(selector[index],index,selector[index]);
-						})(i);						
-					}
-				}
-				if(toString.call(selector) === '[object Object]'){
-					for(var i in selector){
-						(function(index){
-							callback.call(selector[i],i,selector[i]);
-						})(i);							
-					}
+			if(selector){				
+				for(var index in selector){
+					callback.call(selector[index],index,selector[index]);
 				}
 			}
 		}
@@ -61,19 +50,8 @@
 				callback = _fn;
 			}
 			
-			if(toString.call(selector) === '[object Array]'){
-				for(var i=0,len=selector.length;i<len;i++){
-					(function(index){
-						callback.call(selector[index],index,selector[index]);
-					})(i);						
-				}
-			}
-			if(toString.call(selector) === '[object Object]'){
-				for(var i in selector){
-					(function(index){
-						callback.call(selector[index],index,selector[index]);
-					})(i);							
-				}
+			for(var index in selector){
+				callback.call(selector[index],index,selector[index]);
 			}
 		},
 		send : function(obj,callback){
